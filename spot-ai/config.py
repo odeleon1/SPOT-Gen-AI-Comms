@@ -17,7 +17,7 @@ CHUNK_SIZE         = 1024     # Frames per buffer read
 MAX_RECORD_SECONDS = 15       # Max duration of a single recording before auto-stop
 SILENCE_THRESHOLD  = 0.01     # Amplitude below this is considered silence (0.0 - 1.0)
 SILENCE_DURATION   = 1.5      # Seconds of silence before recording stops
-
+INT16_MAX = 32767             # Max value for int16 PCM audio, used for normalization
 # --- Activation ---
 ACTIVATION_PHRASE   = "hey spot"
 DEACTIVATION_PHRASE = "goodbye spot"
