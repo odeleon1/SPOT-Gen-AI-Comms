@@ -1,0 +1,9 @@
+# Requirements.txt
+
+openai
+sounddevice
+numpy
+scipy
+keyboard
+python-dotenv
+ 

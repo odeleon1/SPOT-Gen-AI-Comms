@@ -1,0 +1,9 @@
+# .gitignore
+.env
+__pycache__/
+*.pyc
+
+# Virtual environment - common folder names
+venv/
+env/
+.venv/
