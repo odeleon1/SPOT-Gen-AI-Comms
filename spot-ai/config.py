@@ -19,7 +19,7 @@ SILENCE_THRESHOLD  = 0.01     # Amplitude below this is considered silence (0.0 
 SILENCE_DURATION   = 1.5      # Seconds of silence before recording stops
 INT16_MAX = 32767             # Max value for int16 PCM audio, used for normalization
 # --- Activation ---
-ACTIVATION_PHRASE   = "hey spot"
+ACTIVATION_PHRASE   = "start spot"
 DEACTIVATION_PHRASE = "goodbye spot"
 MANUAL_TOGGLE_KEY   = "enter"
 
