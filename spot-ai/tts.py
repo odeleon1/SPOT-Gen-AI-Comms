@@ -1,21 +1,21 @@
 import io
+
 import numpy as np
 import sounddevice as sd
 import scipy.io.wavfile as wav
-from openai import OpenAI
+from elevenlabs.client import ElevenLabs
 
 import config
 
-client = OpenAI(api_key=config.OPENAI_API_KEY)
+client = ElevenLabs(api_key=config.ELEVENLABS_API_KEY)
 
 
-def _mp3_bytes_to_numpy(mp3_bytes: bytes) -> tuple[np.ndarray, int]:
+def _wav_bytes_to_numpy(wav_bytes: bytes) -> tuple[np.ndarray, int]:
     """
-    Decode MP3 bytes returned by the TTS API into a NumPy array that
-    sounddevice can play. Uses scipy to decode via an in-memory buffer.
-    Returns (audio_array, sample_rate).
+    Decode WAV bytes returned by the TTS API into a NumPy array that
+    sounddevice can play. Returns (audio_array, sample_rate).
     """
-    buffer = io.BytesIO(mp3_bytes)
+    buffer = io.BytesIO(wav_bytes)
     sample_rate, audio = wav.read(buffer)
     # Normalize to float32 in range [-1.0, 1.0] for sounddevice
     audio = audio.astype(np.float32) / config.INT16_MAX
@@ -24,20 +24,20 @@ def _mp3_bytes_to_numpy(mp3_bytes: bytes) -> tuple[np.ndarray, int]:
 
 def speak(text: str) -> None:
     """
-    Convert text to speech using the OpenAI TTS API and play it through
+    Convert text to speech using the ElevenLabs TTS API and play it through
     the system speakers. Blocks until playback is complete so responses
     do not overlap with the next recording cycle.
     Called by main.py after llm.py returns a reply.
     """
-    response = client.audio.speech.create(
-        model=config.TTS_MODEL,
-        voice=config.TTS_VOICE,
-        input=text,
-        response_format="wav",  # Request WAV directly so scipy can decode it
+    chunks = client.text_to_speech.convert(
+        voice_id = config.TTS_VOICE_ID,
+        text = text,
+        model_id = config.TTS_MODEL,
+        output_format = "wav_24000",   # raw WAV so scipy can decode it directly
     )
+    wav_bytes = b"".join(chunks)
 
-    wav_bytes = response.content
-    audio, sample_rate = _mp3_bytes_to_numpy(wav_bytes)
+    audio, sample_rate = _wav_bytes_to_numpy(wav_bytes)
 
     sd.play(audio, samplerate=sample_rate)
     sd.wait()  # Block until playback finishes

@@ -1,12 +1,13 @@
 import io
+
 import numpy as np
 import sounddevice as sd
 import scipy.io.wavfile as wav
-from openai import OpenAI, audio
+from elevenlabs.client import ElevenLabs
 
 import config
 
-client = OpenAI(api_key=config.OPENAI_API_KEY)
+client = ElevenLabs(api_key=config.ELEVENLABS_API_KEY)
 
 
 def _record_until_silence(max_seconds: float) -> np.ndarray:
@@ -55,7 +56,7 @@ def _record_until_silence(max_seconds: float) -> np.ndarray:
 def _numpy_to_wav_bytes(audio: np.ndarray) -> bytes:
     """
     Encode a float32 NumPy array as WAV bytes (in-memory, no temp file).
-    Converts to int16 PCM before encoding, which Whisper expects.
+    Converts to int16 PCM before encoding, which Scribe expects.
     """
     pcm = (audio * config.INT16_MAX).astype(np.int16)
     buffer = io.BytesIO()
@@ -66,19 +67,18 @@ def _numpy_to_wav_bytes(audio: np.ndarray) -> bytes:
 
 def _transcribe(audio: np.ndarray) -> str:
     """
-    Send a NumPy audio array to the OpenAI Whisper API and return the
+    Send a NumPy audio array to the ElevenLabs Scribe API and return the
     transcribed text as a lowercase string.
     """
     wav_bytes = _numpy_to_wav_bytes(audio)
     audio_file = io.BytesIO(wav_bytes)
-    audio_file.name = "audio.wav"   # Whisper requires a filename with extension
+    audio_file.name = "audio.wav"   # Scribe requires a filename with extension
 
-    response = client.audio.transcriptions.create(
-        model = config.WHISPER_MODEL,
+    response = client.speech_to_text.convert(
+        model_id = config.STT_MODEL,
         file = audio_file,
-        response_format = "text",
     )
-    return response.strip().lower()
+    return response.text.strip().lower()
 
 
 def listen_short() -> str:

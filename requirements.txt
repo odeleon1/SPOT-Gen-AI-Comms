@@ -1,9 +1,9 @@
 # Requirements.txt
 
 openai
+elevenlabs
 sounddevice
 numpy
 scipy
 keyboard
 python-dotenv
- 

@@ -1,6 +1,6 @@
 # SPOT Generative AI Comms
 
-A proof of concept that adds a voice-based conversational AI to a Boston Dynamics SPOT robot, similar to ChatGPT’s voice mode. The system listens through a microphone, transcribes speech, generates a spoken reply, and plays it back. It is built to talk with TxDOT colleagues about what SPOT can offer the department besides its live LiDAR scanning capability and other use cases being explored. This PoC runs on a regular laptop with the integrated microphone and speaker before being moved onto the robot itself.
+A proof of concept that adds a voice-based conversational AI to a Boston Dynamics SPOT robot, similar to ChatGPT's voice mode. The system listens through a microphone, transcribes speech, generates a spoken reply, and plays it back, using Grok for the language model and ElevenLabs for speech-to-text and text-to-speech. It is built to talk with colleagues at a transportation and infrastructure agency about what SPOT can offer — its live LiDAR scanning capability and other use cases being explored. This PoC runs on a regular laptop with a USB mic and speakers before being moved onto the robot itself.
 
 ## How It Works
 
@@ -9,31 +9,31 @@ The system has two states. While **idle** it only listens for the activation phr
 ## Setup
 
 1. Clone the repo and enter the folder:
-   
    ```bash
    git clone <repo-url>
    cd spot-ai
    ```
-1. Create and activate a virtual environment:
-   
+
+2. Create and activate a virtual environment:
    ```bash
    python -m venv venv
-   
+
    # Mac/Linux
    source venv/bin/activate
-   
+
    # Windows
    venv\Scripts\activate
    ```
-1. Install dependencies:
-   
+
+3. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-1. Create a `.env` file in the project folder with your OpenAI API key:
-   
+
+4. Create a `.env` file in the project folder with your API keys (see `.env.example`):
    ```
-   OPENAI_API_KEY=your-key-here
+   XAI_API_KEY=your-xai-key-here
+   ELEVENLABS_API_KEY=your-elevenlabs-key-here
    ```
 
 ## Running
@@ -46,4 +46,4 @@ sudo python main.py
 python main.py
 ```
 
-Once running, say **“start spot”** or press **Enter** to activate, then start talking. Say **“goodbye spot”** or press **Enter** again to deactivate. Press **Ctrl+C** to quit.
+Once running, say **"start spot"** or press **Enter** to activate, then start talking. Say **"goodbye spot"** or press **Enter** again to deactivate. Press **Ctrl+C** to quit.
